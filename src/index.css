@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+	body {
+		padding: 1.2rem;
+		background-color: theme('colors.rose.50');
+	}
+
+	@screen lg {
+		body {
+			padding: 2.5rem;
+		}
+	}
+}
