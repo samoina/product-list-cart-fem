@@ -5,6 +5,7 @@ export const theme = {
 		colors: {
 			red: 'hsl(14, 86%, 42%)',
 			green: 'hsl(159, 69%, 38%)',
+			brownActive: 'rgba(201,61,14,255)',
 			rose: {
 				50: 'hsl(20, 50%, 98%)',
 				100: 'hsl(13, 31%, 94%)',

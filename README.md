@@ -26,7 +26,7 @@ Users should be able to:
 - Increase/decrease the number of items in the cart
 - See an order confirmation modal when they click "Confirm Order"
 - Reset their selections when they click "Start New Order"
-- View the optimal layout for the interface depending on their device's screen size
+- :white_check_mark: View the optimal layout for the interface depending on their device's screen size
 - See hover and focus states for all interactive elements on the page
 
 ### Screenshot
@@ -56,36 +56,83 @@ Then crop/optimize/edit your image however you like, add it to your project, and
 - CSS Grid
 - Mobile-first workflow
 - [React](https://reactjs.org/) - JS library
-- [Next.js](https://nextjs.org/) - React framework
-- [Styled Components](https://styled-components.com/) - For styles
-
-**Note: These are just examples. Delete this note and replace the list above with your own choices**
 
 ### What I learned
 
-Use this section to recap over some of your major learnings while working through this project. Writing these out and providing code samples of areas you want to highlight is a great way to reinforce your own knowledge.
+#### Creating local and global state
 
-To see how you can add code snippets, see below:
+Once I had the design up, i needed to figure out a way to update the cart items for the specific cart and then the sum total for all the items added. Initially I just set Global State but this meant that on every subsequent click, each cart item would have the global count. To get around this, I first created local state in the Cart Order component that would inrease or decrease individually depending on what is selected. Then, I would update the Global Counter accordingly using the Global State and this worked.
 
-```html
-<h1>Some HTML code I'm proud of</h1>
-```
+```tsx
+//get initial state value from global state
+const globalCounterToUpdate = useHookstate(GlobalCounter);
 
-```css
-.proud-of-this-css {
-	color: papayawhip;
-}
-```
+//create local state to keep track of the specific order amount per product
+const localCounter = useHookstate(0);
 
-```js
-const proudOfThisFunc = () => {
-	console.log('🎉');
+const handleIncrement = () => {
+	localCounter.set((lc) => lc + 1);
+	globalCounterToUpdate.set((gc) => gc + 1);
+};
+
+const handleDecrement = () => {
+	if (localCounter.get() > 0) {
+		localCounter.set((lc) => lc - 1);
+		globalCounterToUpdate.set((gc) => gc - 1);
+	}
 };
 ```
 
-If you want more help with writing markdown, we'd recommend checking out [The Markdown Guide](https://www.markdownguide.org/) to learn more.
+#### My components re-rendered multiple times
 
-**Note: Delete this note and the content within this section and replace with your own learnings.**
+whenever the global state changed (which would happe when I updated the local state to 'add to cart' which in turn changed global state and reset the button), the Cartcard component re-renderd and caused the button to reset yet i wanted it to persist and show the (-) and (+) buttons.
+
+I am learning that state does not change variables - it imply triggers a re-render. which is what happens when i click on 'add cart' as this re-renders the UI.
+
+setting stte only changes it for the next render. (it helps to mentally replace the state variable with their values.) even with a settimeout, React takes a snapshot of the time that the user interacted with the component.
+
+Found out that I could use `useRef` to manipulate the DOM. first, i declare a ref object and set its initial value to null and then pass the ref objct as an attribute to he jsx of he DOM i want to manipulate. this still didnt work as i expeted so i checked React dev tools to see what was re-rendering - abd i learned it was the selected Cart order and the parent App.
+
+The first thing that i did to remedy this was to:
+
+1. edit the way in which i was extracting the propertes from the global state and this eliminated the re-rendering of the SelctedCartOrder component.
+
+```js
+//before, i was accesing the order.get() name directly in the return statement.
+...
+return (
+    <div>
+        <p>Name: {order.get().name}</p>
+        <p>Price: ${order.get().price.toFixed(2)}</p>
+    </div>
+);
+...
+
+//now i am doing it before the return statement
+const counter = useHookstate(GlobalCounter);
+const order = useHookstate(GlobalOrder);
+
+const { name, price } = order.get();
+```
+
+#### Re-rendering
+
+1. anything that uses global state within the component tree will re-render when the counter changes - which is what makes the buttons not persist. and in my case, using crypto.randomUUID() as the key generates a new unique key makng React treat the component as new, thus reseting the state. this took me too long to realize!!
+
+#### I needed to get the product name from the Cartcard component once clicked, so used useHookstate()
+
+this way, when Add cart is clicked, the global state is updated with the name of the food. the next thing was to figure out how to append instead of simply replacing the order items. to do this, i would need to set the gobal order to an empty array of food items. when the addto cart button is clicked, it pushes the product details (product and price into the array. ) i would also need a 'quantity field' in the array for this.
+
+The idea is to check if the product alread exists and just to update its quantity, instead of adding multiple entries for each product click.
+
+then i get to loop over the array in the selectd cart order. to get the name, quantity, unit price - and the multiply to get the order total.
+
+#### when handling the 'add to cart' function, this is not where i update the cart,
+
+This function is only meant to show the controls, then the - and + buttons handle the adding to the cart order. .set() from hookstate takes in a new value/promise/function returning either of these. the fuction takes the current state value as an arg
+
+#### the total does not update after the initial click of oe, so when the quantity goes up i also need to add the total
+perhaps the total also needs to be in the initial order
 
 ### Continued development
 
@@ -95,7 +142,8 @@ Use this section to outline areas that you want to continue focusing on in futur
 
 ### Useful resources
 
-- [Example resource 1](https://www.example.com) - This helped me for XYZ reason. I really liked this pattern and will use it going forward.
+- [How to check if your compnent is re-rendering](https://jsramblings.com/how-to-check-if-your-component-rerendered-and-why/) - This helped me figure out what was causing a re-render so that my buttons wouldn't persist.
+
 - [Example resource 2](https://www.example.com) - This is an amazing article which helped me finally understand XYZ. I'd recommend it to anyone still learning this concept.
 
 **Note: Delete this note and replace the list above with resources that helped you during the challenge. These could come in handy for anyone viewing your solution or for yourself when you look back on this project in the future.**
