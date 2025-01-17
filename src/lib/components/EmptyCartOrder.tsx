@@ -1,4 +1,4 @@
-import emptyCartIcon from '../../assets/images/illustration-empty-cart.svg';
+import emptyCartIcon from '/assets/images/illustration-empty-cart.svg';
 import { useHookstate } from '@hookstate/core';
 import { GlobalCounter } from '../store/Global';
 

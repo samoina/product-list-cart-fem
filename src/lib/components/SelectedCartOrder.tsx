@@ -1,8 +1,8 @@
 import { useHookstate } from '@hookstate/core';
 import { GlobalCounter } from '../store/Global';
 import { GlobalOrder } from '../store/Global';
-import cancelIcon from '../../assets/images/icon-remove-item.svg';
-import carbonNeutral from '../../assets/images/icon-carbon-neutral.svg';
+import cancelIcon from '/assets/images/icon-remove-item.svg';
+import carbonNeutral from '/assets/images/icon-carbon-neutral.svg';
 
 const SelectedCartOrder = () => {
 	const counter = useHookstate(GlobalCounter);

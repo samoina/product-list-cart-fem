@@ -44,7 +44,7 @@ Then crop/optimize/edit your image however you like, add it to your project, and
 ### Links
 
 - Solution URL: [Add solution URL here](https://github.com/samoina/product-list-cart-fem)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Live Site URL: [Add live site URL here](https://samoina-product-list-cart-fem.vercel.app/)
 
 ## My process
 
@@ -132,6 +132,7 @@ then i get to loop over the array in the selectd cart order. to get the name, qu
 This function is only meant to show the controls, then the - and + buttons handle the adding to the cart order. .set() from hookstate takes in a new value/promise/function returning either of these. the fuction takes the current state value as an arg
 
 #### the total does not update after the initial click of oe, so when the quantity goes up i also need to add the total
+
 perhaps the total also needs to be in the initial order
 
 ### Continued development

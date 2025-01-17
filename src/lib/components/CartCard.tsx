@@ -1,4 +1,4 @@
-import cartIcon from '../../assets/images/icon-add-to-cart.svg';
+import cartIcon from '/assets/images/icon-add-to-cart.svg';
 import { GlobalCounter, GlobalOrder } from '../store/Global';
 import { useHookstate } from '@hookstate/core';
 import { useState } from 'react';
@@ -48,7 +48,12 @@ const CartCard: React.FC<CartCardProps> = ({ product }) => {
 			const totalUserOrder = product.price * localCounter;
 			return [
 				...prevOrder,
-				{ name: product.name, price: product.price, quantity: 1, total: totalUserOrder },
+				{
+					name: product.name,
+					price: product.price,
+					quantity: 1,
+					total: totalUserOrder,
+				},
 			];
 		});
 
