@@ -53,6 +53,7 @@ const CartCard: React.FC<CartCardProps> = ({ product }) => {
 					price: product.price,
 					quantity: 1,
 					total: totalUserOrder,
+					thumbnail: product.image.thumbnail,
 				},
 			];
 		});

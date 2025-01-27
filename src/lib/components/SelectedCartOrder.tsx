@@ -3,6 +3,7 @@ import { GlobalCounter } from '../store/Global';
 import { GlobalOrder } from '../store/Global';
 import cancelIcon from '/assets/images/icon-remove-item.svg';
 import carbonNeutral from '/assets/images/icon-carbon-neutral.svg';
+import OrderConfirmed from './modals/OrderConfirmed';
 
 const SelectedCartOrder = () => {
 	const counter = useHookstate(GlobalCounter);
@@ -68,12 +69,7 @@ const SelectedCartOrder = () => {
 					</p>
 				</div>
 
-				<button
-					type="button"
-					className="bg-brownActive text-white py-2 rounded-3xl hover:bg-rose-800"
-				>
-					Confirm Order
-				</button>
+				<OrderConfirmed />
 			</div>
 		</>
 	);

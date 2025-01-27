@@ -15,7 +15,16 @@ type OrderItem = {
 	price: number;
 	quantity: number;
 	total: number;
+	thumbnail: string;
+};
+
+type Global = {
+	isConfirmationModalOpen: boolean;
 };
 
 const InitialOrder: OrderItem[] = [];
 export const GlobalOrder = hookstate(InitialOrder);
+
+export const globalState = hookstate<Global>({
+	isConfirmationModalOpen: false,
+});
