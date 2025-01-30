@@ -25,6 +25,8 @@ type Global = {
 const InitialOrder: OrderItem[] = [];
 export const GlobalOrder = hookstate(InitialOrder);
 
-export const globalState = hookstate<Global>({
+export const GlobalState = hookstate<Global>({
 	isConfirmationModalOpen: false,
 });
+
+export const GlobalResetTrigger = hookstate(0);

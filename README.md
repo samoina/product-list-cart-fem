@@ -133,7 +133,17 @@ This function is only meant to show the controls, then the - and + buttons handl
 
 #### the total does not update after the initial click of oe, so when the quantity goes up i also need to add the total
 
-perhaps the total also needs to be in the initial order
+perhaps the total also needs to be in the initial order, so i added it to the structure of the initial Order.
+
+#### Clearing the local counters when the user starts a new order
+
+The challenge here was that the local counters are managed in the CartCard, while the call to reset the global state comes from the Orderconfirmed modal.
+
+its proving hard to reset the localcounter from the orderconfirmed modal and pass it up to the selectedCartOrder then up to the CartCard where the local counter us and i am wondering whethe the selectedcartorder should also contain the modal instead of it been a separate component
+
+1. i combined the modal into the SelectedCartOrder to make one component
+2. Create a new global state that will be changed when the handleNewOrder() function is called.
+3. in the CartCard where the local state is, add the trigger value as a dependency, so that when that changes, then the localcounter is cleared.
 
 ### Continued development
 

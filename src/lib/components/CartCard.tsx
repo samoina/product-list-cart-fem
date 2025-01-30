@@ -1,7 +1,11 @@
 import cartIcon from '/assets/images/icon-add-to-cart.svg';
-import { GlobalCounter, GlobalOrder } from '../store/Global';
+import {
+	GlobalCounter,
+	GlobalOrder,
+	GlobalResetTrigger,
+} from '../store/Global';
 import { useHookstate } from '@hookstate/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Product {
 	name: string;
@@ -23,9 +27,18 @@ const CartCard: React.FC<CartCardProps> = ({ product }) => {
 	//add global state to keep track of the specific order amount per product
 	const globalCounter = useHookstate(GlobalCounter);
 	const globalOrder = useHookstate(GlobalOrder);
+	const resetTrigger = useHookstate(GlobalResetTrigger);
 
 	const [localCounter, setLocalCounter] = useState(0);
 	const [showCounterControls, setShowCounterControls] = useState(false);
+	const [isInCart, setIsInCart] = useState(false);
+	const resetTriggerValue = resetTrigger.get();
+
+	useEffect(() => {
+		setLocalCounter(0);
+		setShowCounterControls(false);
+		setIsInCart(false); //reset this when the trigger changes
+	}, [resetTriggerValue]);
 
 	const handleIncrement = () => {
 		//update the local & global counter
@@ -91,6 +104,7 @@ const CartCard: React.FC<CartCardProps> = ({ product }) => {
 	const handleAddToCartClick = () => {
 		//change the state of the counter controls
 		setShowCounterControls(true);
+		setIsInCart(true);
 
 		console.log(`Added new product to order: ${product.name}`);
 	};
@@ -101,7 +115,9 @@ const CartCard: React.FC<CartCardProps> = ({ product }) => {
 				<source media="(min-width: 1024px)" srcSet={product.image.desktop} />
 				<source media="(min-width: 768px)" srcSet={product.image.tablet} />
 				<img
-					className="rounded-lg"
+					className={`rounded-lg ${
+						isInCart ? 'border-4 border-brownActive' : ''
+					}`}
 					src={product.image.mobile}
 					alt={product.name}
 				/>
