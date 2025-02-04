@@ -29,10 +29,9 @@ const SelectedCartOrder = () => {
 	const { isConfirmationModalOpen } = useHookstate(GlobalState);
 	//use this global state to listen to changes when a new order is made and then reset the local counters in the specific cartcards. the local reset trigger is for the specific cartcard
 	const globalResetTrigger = useHookstate(GlobalResetTrigger);
-	let counterDisplay = counter.get();
 
 	//handle the click of the x icon to remove the item from the order
-	const handleXClick = (item) => {
+	const handleXClick = (item: { name: string; price: number; quantity: number; }) => {
 		console.log('handle clicked', item.name);
 		//update global state for the removed item
 		RemovedItemState.set(item.name);
