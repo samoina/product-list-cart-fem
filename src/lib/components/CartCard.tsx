@@ -6,6 +6,7 @@ import {
 } from '../store/Global';
 import { useHookstate } from '@hookstate/core';
 import { useEffect, useState } from 'react';
+import { RemovedItemState } from '../store/Global';
 
 interface Product {
 	name: string;
@@ -29,16 +30,33 @@ const CartCard: React.FC<CartCardProps> = ({ product }) => {
 	const globalOrder = useHookstate(GlobalOrder);
 	const resetTrigger = useHookstate(GlobalResetTrigger);
 
+	//track removed items
+	const removedItem = useHookstate(RemovedItemState);
+
 	const [localCounter, setLocalCounter] = useState(0);
 	const [showCounterControls, setShowCounterControls] = useState(false);
 	const [isInCart, setIsInCart] = useState(false);
 	const resetTriggerValue = resetTrigger.get();
 
+	//this is for a blobal reset once the user confirms an order
 	useEffect(() => {
 		setLocalCounter(0);
 		setShowCounterControls(false);
 		setIsInCart(false); //reset this when the trigger changes
 	}, [resetTriggerValue]);
+
+	//this is to reset the local state of the specific food item
+	useEffect(() => {
+		const removedItemName = removedItem.get();
+		if (removedItemName === product.name) {
+			setLocalCounter(0);
+			setIsInCart(false);
+			setShowCounterControls(false);
+
+			// Reset the removed item state to prevent unnecessary re-renders
+			RemovedItemState.set(null);
+		}
+	}, [removedItem, product.name]);
 
 	const handleIncrement = () => {
 		//update the local & global counter

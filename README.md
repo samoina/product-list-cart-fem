@@ -145,6 +145,17 @@ its proving hard to reset the localcounter from the orderconfirmed modal and pas
 2. Create a new global state that will be changed when the handleNewOrder() function is called.
 3. in the CartCard where the local state is, add the trigger value as a dependency, so that when that changes, then the localcounter is cleared.
 
+#### Click the x icon to remove an item from the cart
+
+the catch is to remove the item from the cart and clear the local counters without the global reset. the global reset changes the local counter so that when it restarts, the LC and the globalcounter do not match.
+
+I finally figured this out by doing the following:
+
+1. On clicking the X icon, take note of the product name
+2. create global state to keep track of the removed food item
+3. when the x icon is clicked, se the global state to include the specific product, and also modify the order.
+4. Back to the cartcard, subscribe to the Global Removed Item State and place it in a useeffect, so that if the removed item in state matches the product name, reset that specific local counter to 0, remove the counter controls and then reset the global removed state to prevent re-renders. this use effect is dependent on the removedItem(from state) and the product name (in the cart card component)
+
 ### Continued development
 
 Use this section to outline areas that you want to continue focusing on in future projects. These could be concepts you're still not completely comfortable with or techniques you found useful that you want to refine and perfect.
@@ -155,20 +166,11 @@ Use this section to outline areas that you want to continue focusing on in futur
 
 - [How to check if your compnent is re-rendering](https://jsramblings.com/how-to-check-if-your-component-rerendered-and-why/) - This helped me figure out what was causing a re-render so that my buttons wouldn't persist.
 
-- [Example resource 2](https://www.example.com) - This is an amazing article which helped me finally understand XYZ. I'd recommend it to anyone still learning this concept.
-
-**Note: Delete this note and replace the list above with resources that helped you during the challenge. These could come in handy for anyone viewing your solution or for yourself when you look back on this project in the future.**
-
 ## Author
 
-- Website - [Add your name here](https://www.your-site.com)
-- Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/yourusername)
-- Twitter - [@yourusername](https://www.twitter.com/yourusername)
-
-**Note: Delete this note and add/remove/edit lines above based on what links you'd like to share.**
+- Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/samoia)
+- Twitter - [@yourusername](https://www.twitter.com/samoina)
 
 ## Acknowledgments
 
-This is where you can give a hat tip to anyone who helped you out on this project. Perhaps you worked in a team or got some inspiration from someone else's solution. This is the perfect place to give them some credit.
-
-**Note: Delete this note and edit this section's content as necessary. If you completed this challenge by yourself, feel free to delete this section entirely.**
+Thanks to [@Ian McBool](https://x.com/McBooll) for his help with my understanding of the separation of concerns with local state (specific to each food item) and global state which encompasses things like the total quantity and cost.

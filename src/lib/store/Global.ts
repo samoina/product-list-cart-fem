@@ -29,4 +29,11 @@ export const GlobalState = hookstate<Global>({
 	isConfirmationModalOpen: false,
 });
 
+//add global state to detect the change to  takin a new order and reset the local counters in the cartcards
 export const GlobalResetTrigger = hookstate(0);
+
+//add a global counters objects to track each products count
+export const GlobalCounters = hookstate<{ [key: string]: number }>({});
+
+//create Global state for the removed items
+export const RemovedItemState = hookstate<string | null>(null);

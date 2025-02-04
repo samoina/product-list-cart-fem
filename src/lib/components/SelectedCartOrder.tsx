@@ -18,19 +18,57 @@ import {
 	DialogOverlay,
 } from '@radix-ui/react-dialog';
 
+//keep track of the removed items
+import { RemovedItemState } from '../store/Global';
+
 const SelectedCartOrder = () => {
 	const counter = useHookstate(GlobalCounter);
 
 	//remember order is an array of objects so we need to loop thru it.
 	const order = useHookstate(GlobalOrder);
 	const { isConfirmationModalOpen } = useHookstate(GlobalState);
-	const globalReserTrigger = useHookstate(GlobalResetTrigger);
+	//use this global state to listen to changes when a new order is made and then reset the local counters in the specific cartcards. the local reset trigger is for the specific cartcard
+	const globalResetTrigger = useHookstate(GlobalResetTrigger);
+	let counterDisplay = counter.get();
+
+	//handle the click of the x icon to remove the item from the order
+	const handleXClick = (item) => {
+		console.log('handle clicked', item.name);
+		//update global state for the removed item
+		RemovedItemState.set(item.name);
+		/*
+1. remove the item from the global order
+2. deduct the quantity & price
+3. clear the local counter
+		*/
+
+		order.set((prevOrder) => {
+			const existingProduct = prevOrder.findIndex(
+				(mealItem) => mealItem.name === item.name
+			);
+			if (existingProduct !== -1) {
+				prevOrder[existingProduct].quantity = 0;
+				prevOrder[existingProduct].total -= prevOrder[existingProduct].price;
+				if (prevOrder[existingProduct].quantity === 0) {
+					prevOrder.splice(existingProduct, 1);
+				}
+
+				//update the global counter
+				const totalQuantity = prevOrder.reduce(
+					(total, item) => total + item.quantity,
+					0
+				);
+				counter.set(totalQuantity);
+			}
+			return prevOrder;
+		});
+	};
 
 	const handleNewOrder = () => {
 		isConfirmationModalOpen.set(false);
 		GlobalCounter.set(0);
 		order.set([]);
-		globalReserTrigger.set((prev) => prev + 1);
+		globalResetTrigger.set((prev) => prev + 1);
 	};
 
 	return (
@@ -61,9 +99,10 @@ const SelectedCartOrder = () => {
 							</div>
 							{/* on click */}
 							<img
-								className="rounded-full w-3 h-3 border border-rose-300 self-center"
+								className="rounded-full w-3 h-3 border border-rose-300 self-center hover:border-rose-500 cursor-pointer"
 								src={cancelIcon}
 								alt="Cancel sign"
+								onClick={() => handleXClick(item)}
 							/>
 						</div>
 					))}
