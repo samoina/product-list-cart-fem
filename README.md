@@ -152,6 +152,10 @@ I finally figured this out by doing the following:
 
 i will be incorporating an Express.js backend to serve product data from MongoDB.
 
+#### Using react Query to handle the fetching of the products list from the backend.
+
+I first installed React Query, then to the main entry file to define a Query Client and wrap it so that the whole project has access to React Query. I also installed Reactquery devtools to make debugging easier, sand added it to the entry app
+
 ### Useful resources
 
 - [How to check if your compnent is re-rendering](https://jsramblings.com/how-to-check-if-your-component-rerendered-and-why/) - This helped me figure out what was causing a re-render so that my buttons wouldn't persist.
