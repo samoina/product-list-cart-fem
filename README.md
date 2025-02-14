@@ -156,6 +156,18 @@ i will be incorporating an Express.js backend to serve product data from MongoDB
 
 I first installed React Query, then to the main entry file to define a Query Client and wrap it so that the whole project has access to React Query. I also installed Reactquery devtools to make debugging easier, sand added it to the entry app
 
+With vite scaffolding, we check whether the app is in PROD with:
+
+```tsx
+const isProd = import.meta.env.PROD;
+
+const response = await fetch(
+	isProd
+		? 'https://product-list-cart-server.onrender.com/api/products'
+		: 'http://localhost:8000/api/products'
+);
+```
+
 ### Useful resources
 
 - [How to check if your compnent is re-rendering](https://jsramblings.com/how-to-check-if-your-component-rerendered-and-why/) - This helped me figure out what was causing a re-render so that my buttons wouldn't persist.
